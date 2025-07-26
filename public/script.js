@@ -139,6 +139,8 @@ function handleContactForm(form) {
         console.log('Contact form data:', data);
         showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
         form.reset();
+
+        
         
         // Reset button
         submitBtn.innerHTML = originalText;
