@@ -47,7 +47,7 @@
     "stripe": "^14.9.0",
     "google-auth-library": "^9.4.1",
     "googleapis": "^129.0.0",
-    "dialogflow": "^6.0.0",
+    "dialogflow": "^1.2.0",
     "@google-cloud/storage": "^7.7.0",
     "@google-cloud/firestore": "^7.1.0",
     "@google-cloud/pubsub": "^4.0.7",

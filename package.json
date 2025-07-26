@@ -1,5 +1,5 @@
 {
-  "name": "nxtai-production",
+  "name": "nxtai-25-07",
   "version": "1.0.0",
   "description": "NXT.AI - Plataforma CRM Multi-Tenant com Automação de Marketing",
   "private": true,
@@ -42,7 +42,7 @@
     "deploy:production": "firebase use production && npm run deploy",
     "logs": "firebase functions:log",
     "logs:follow": "firebase functions:log --follow",
-    "backup:firestore": "firebase firestore:export gs://nxtai-production-backups/firestore-$(date +%Y%m%d-%H%M%S)",
+    "backup:firestore": "firebase firestore:export gs://nxtai-25-07-backups/firestore-$(date +%Y%m%d-%H%M%S)",
     "restore:firestore": "firebase firestore:import",
     "security:audit": "npm audit --recursive",
     "security:fix": "npm audit fix --recursive",
