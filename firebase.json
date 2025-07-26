@@ -1,26 +1,18 @@
 {
-  "hosting": [
-    {
-      "target": "marketing",
-      "public": "public",
-      "rewrites": [
-        {
-          "source": "/api/contact",
-          "function": "api-contact"
-        }
-      ]
-    },
-    {
-      "target": "app",
-      "public": "packages/web/dist",
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    }
-  ],  
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
   "functions": [
     {
       "source": "functions",
@@ -33,10 +25,9 @@
         "*.local"
       ],
       "predeploy": [
-        "npm --prefix \"packages/functions\" install",
-        "npm --prefix \"packages/functions\" run build"
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
-    }   
+    }
   ],
   "firestore": {
     "database": "(default)",
@@ -44,15 +35,31 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "apphosting": {
-    "backendId": "nxtai-25-07",
-    "rootDir": "/",
-    "ignore": [
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log",
-      "functions"
-    ]
+  "apphosting": [
+    {
+      "backendId": "nxtai-25-07",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    },
+    {
+      "backendId": "nxtai-25-07",
+      "rootDir": "/",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "functions"
+      ]
+    }
+  ],
+  "storage": {
+    "rules": "storage.rules"
   }
 }
