@@ -1,12 +1,26 @@
 {
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  },
+  "hosting": [
+    {
+      "target": "marketing",
+      "public": "public",
+      "rewrites": [
+        {
+          "source": "/api/contact",
+          "function": "api-contact"
+        }
+      ]
+    },
+    {
+      "target": "app",
+      "public": "packages/web/dist",
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],  
   "functions": [
     {
       "source": "functions",
@@ -19,6 +33,7 @@
         "*.local"
       ],
       "predeploy": [
+        "npm --prefix \"packages/functions\" install",
         "npm --prefix \"packages/functions\" run build"
       ]
     }   

@@ -123,30 +123,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Form handlers
-function handleContactForm(form) {
+// REAL IMPLEMENTATION for handleContactForm
+async function handleContactForm(form) {
+    console.log('handleContactForm called')
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    
-    // Add loading state
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        message: formData.get('message')
+    };
+
     const submitBtn = form.querySelector('.btn-submit');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     submitBtn.disabled = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-        console.log('Contact form data:', data);
-        showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
-        form.reset();
 
-        
-        
+    // The API URL will be '/api/contact' because of the rewrite in firebase.json
+    const apiUrl = '/api/contact';
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+            form.reset();
+        } else {
+            const errorData = await response.json();
+            showNotification(`Erro: ${errorData.error || 'Não foi possível enviar a mensagem.'}`, 'error');
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        showNotification('Erro de conexão. Por favor, tente novamente.', 'error');
+    } finally {
         // Reset button
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }, 2000);
+    }
 }
+
 
 function handleLoginForm(form) {
     const formData = new FormData(form);
@@ -598,4 +618,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 200 * (index + 1));
     });
 });
-

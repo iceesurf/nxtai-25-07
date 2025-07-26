@@ -2,8 +2,34 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Default rule: Deny all reads and writes to any collection not explicitly defined.
+    // This is a critical security measure.
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    // Rules for the 'leads' collection
+    // This collection will store submissions from the public contact form.
+    match /leads/{leadId} {
+      // No one can read the leads from the client-side.
+      allow read: if false;
+      
+      // No one can update or delete leads from the client-side.
+      allow update, delete: if false;
+      
+      // Allow anyone to create a lead. This is necessary for the public form.
+      // We will secure this by making the function the only one that can write.
+      // But for the form to work, we need to allow create.
+      allow create: if true;
+    }
+
+    // Rules for the 'users' collection (example for future use)
+    match /users/{userId} {
+      // A user can read their own document.
+      allow read: if request.auth.uid == userId;
+      // A user can create and update their own document.
+      allow write: if request.auth.uid == userId;
     }
   }
 }
