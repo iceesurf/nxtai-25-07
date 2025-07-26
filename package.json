@@ -7,52 +7,36 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:web\" \"npm run dev:functions\"",
-    "dev:web": "cd packages/web && npm run dev",
-    "dev:functions": "cd packages/functions && npm run build:watch",
-    "build": "npm run build:web && npm run build:functions",
-    "build:web": "cd packages/web && npm run build",
-    "build:functions": "cd packages/functions && npm run build",
-    "test": "npm run test:web && npm run test:functions",
-    "test:web": "cd packages/web && npm run test",
-    "test:functions": "cd packages/functions && npm run test",
-    "test:coverage": "npm run test:web -- --coverage && npm run test:functions -- --coverage",
-    "lint": "npm run lint:web && npm run lint:functions",
-    "lint:web": "cd packages/web && npm run lint",
-    "lint:functions": "cd packages/functions && npm run lint",
-    "lint:fix": "npm run lint:web -- --fix && npm run lint:functions -- --fix",
-    "type-check": "npm run type-check:web && npm run type-check:functions",
-    "type-check:web": "cd packages/web && npm run type-check",
-    "type-check:functions": "cd packages/functions && tsc --noEmit",
-    "clean": "npm run clean:web && npm run clean:functions",
-    "clean:web": "cd packages/web && rm -rf dist node_modules",
-    "clean:functions": "cd packages/functions && rm -rf lib node_modules",
-    "install:all": "npm install && npm run install:web && npm run install:functions",
-    "install:web": "cd packages/web && npm install",
-    "install:functions": "cd packages/functions && npm install",
+    "dev": "concurrently \"npm:dev:*\"",
+    "dev:web": "npm run dev -w packages/web",
+    "dev:marketing": "npm run dev -w packages/marketing",
+    "dev:functions": "npm run build:watch -w packages/functions",
+    "build": "npm run build -ws --if-present",
+    "build:web": "npm run build -w packages/web",
+    "build:marketing": "npm run build -w packages/marketing",
+    "build:functions": "npm run build -w packages/functions",
+    "test": "npm run test -ws --if-present",
+    "test:web": "npm run test -w packages/web",
+    "test:marketing": "npm run test -w packages/marketing",
+    "test:functions": "npm run test -w packages/functions",
+    "lint": "npm run lint -ws --if-present",
+    "lint:web": "npm run lint -w packages/web",
+    "lint:marketing": "npm run lint -w packages/marketing",
+    "lint:functions": "npm run lint -w packages/functions",
+    "clean": "npm run clean -ws --if-present",
+    "clean:web": "rm -rf packages/web/dist packages/web/node_modules",
+    "clean:marketing": "rm -rf packages/marketing/dist packages/marketing/node_modules",
+    "clean:functions": "rm -rf packages/functions/lib packages/functions/node_modules",
+    "install:all": "npm install",
     "emulators": "firebase emulators:start",
-    "emulators:export": "firebase emulators:export ./firebase-export",
-    "emulators:import": "firebase emulators:start --import=./firebase-export",
-    "deploy": "npm run build && firebase deploy",
-    "deploy:hosting": "npm run build:web && firebase deploy --only hosting",
-    "deploy:functions": "npm run build:functions && firebase deploy --only functions",
-    "deploy:firestore": "firebase deploy --only firestore",
-    "deploy:storage": "firebase deploy --only storage",
-    "deploy:staging": "firebase use staging && npm run deploy",
-    "deploy:production": "firebase use production && npm run deploy",
+    "deploy": "firebase deploy",
+    "deploy:web": "firebase deploy --only hosting:nxtai-25-07-web",
+    "deploy:marketing": "firebase deploy --only hosting:nxtai-25-07-marketing",
+    "deploy:main": "firebase deploy --only hosting:nxtai-25-07",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:rules": "firebase deploy --only firestore,storage",
     "logs": "firebase functions:log",
-    "logs:follow": "firebase functions:log --follow",
-    "backup:firestore": "firebase firestore:export gs://nxtai-25-07-backups/firestore-$(date +%Y%m%d-%H%M%S)",
-    "restore:firestore": "firebase firestore:import",
-    "security:audit": "npm audit --recursive",
-    "security:fix": "npm audit fix --recursive",
-    "docs:serve": "docsify serve docs",
-    "docs:build": "docsify build docs",
-    "release": "standard-version",
-    "release:major": "standard-version --release-as major",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "postinstall": "husky install"
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -61,14 +45,10 @@
   "keywords": [
     "crm",
     "marketing-automation",
-    "whatsapp-business",
-    "email-marketing",
     "multi-tenant",
     "saas",
     "firebase",
-    "react",
-    "typescript",
-    "nodejs"
+    "react"
   ],
   "author": {
     "name": "NXT.AI Team",
@@ -88,77 +68,7 @@
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "concurrently": "^8.2.2",
-    "docsify-cli": "^4.4.4",
     "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
     "standard-version": "^9.5.0"
-  },
-  "lint-staged": {
-    "packages/web/src/**/*.{js,jsx,ts,tsx}": [
-      "cd packages/web && npm run lint:fix",
-      "cd packages/web && npm run type-check"
-    ],
-    "packages/functions/src/**/*.{js,ts}": [
-      "cd packages/functions && npm run lint:fix"
-    ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "type-enum": [
-        2,
-        "always",
-        [
-          "feat",
-          "fix",
-          "docs",
-          "style",
-          "refactor",
-          "perf",
-          "test",
-          "build",
-          "ci",
-          "chore",
-          "revert"
-        ]
-      ],
-      "scope-enum": [
-        2,
-        "always",
-        [
-          "web",
-          "functions",
-          "shared",
-          "config",
-          "docs",
-          "ci",
-          "deps"
-        ]
-      ]
-    }
-  },
-  "standard-version": {
-    "scripts": {
-      "prebump": "npm run test && npm run build",
-      "postbump": "npm run deploy:staging"
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
-
