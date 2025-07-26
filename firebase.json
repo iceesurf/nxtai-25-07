@@ -1,16 +1,21 @@
 {
   "hosting": [
     {
-      "public": "public",
+      "target": "marketing",
+      "public": "packages/marketing/dist",
       "rewrites": [
         {
           "source": "/api/contact",
           "function": "api-contact"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
         }
       ]
     },
     {
-      "site": "nxtai-25-07-app",
+      "target": "app",
       "public": "packages/web/dist",
       "rewrites": [
         {
@@ -24,68 +29,14 @@
     {
       "source": "functions",
       "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "*.local"
-      ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
+        "npm --prefix packages/functions install",
+        "npm --prefix packages/functions run build"
       ]
     }
   ],
   "firestore": {
-    "database": "(default)",
-    "location": "us-central1",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
-  },
-  "apphosting": [
-    {
-      "backendId": "nxtai-25-07",
-      "rootDir": "/",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "functions"
-      ]
-    },
-    {
-      "backendId": "nxtai-25-07",
-      "rootDir": "/",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "functions"
-      ]
-    },
-    {
-      "backendId": "nxtai-25-07",
-      "rootDir": "/",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "functions"
-      ]
-    },
-    {
-      "backendId": "nxtai-25-07-app",
-      "rootDir": "/packeges/web",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "functions"
-      ]
-    }
-  ]
+  }
 }
