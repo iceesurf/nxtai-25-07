@@ -1,0 +1,164 @@
+{
+  "name": "nxtai-production",
+  "version": "1.0.0",
+  "description": "NXT.AI - Plataforma CRM Multi-Tenant com Automação de Marketing",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:functions\"",
+    "dev:web": "cd packages/web && npm run dev",
+    "dev:functions": "cd packages/functions && npm run build:watch",
+    "build": "npm run build:web && npm run build:functions",
+    "build:web": "cd packages/web && npm run build",
+    "build:functions": "cd packages/functions && npm run build",
+    "test": "npm run test:web && npm run test:functions",
+    "test:web": "cd packages/web && npm run test",
+    "test:functions": "cd packages/functions && npm run test",
+    "test:coverage": "npm run test:web -- --coverage && npm run test:functions -- --coverage",
+    "lint": "npm run lint:web && npm run lint:functions",
+    "lint:web": "cd packages/web && npm run lint",
+    "lint:functions": "cd packages/functions && npm run lint",
+    "lint:fix": "npm run lint:web -- --fix && npm run lint:functions -- --fix",
+    "type-check": "npm run type-check:web && npm run type-check:functions",
+    "type-check:web": "cd packages/web && npm run type-check",
+    "type-check:functions": "cd packages/functions && tsc --noEmit",
+    "clean": "npm run clean:web && npm run clean:functions",
+    "clean:web": "cd packages/web && rm -rf dist node_modules",
+    "clean:functions": "cd packages/functions && rm -rf lib node_modules",
+    "install:all": "npm install && npm run install:web && npm run install:functions",
+    "install:web": "cd packages/web && npm install",
+    "install:functions": "cd packages/functions && npm install",
+    "emulators": "firebase emulators:start",
+    "emulators:export": "firebase emulators:export ./firebase-export",
+    "emulators:import": "firebase emulators:start --import=./firebase-export",
+    "deploy": "npm run build && firebase deploy",
+    "deploy:hosting": "npm run build:web && firebase deploy --only hosting",
+    "deploy:functions": "npm run build:functions && firebase deploy --only functions",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "deploy:storage": "firebase deploy --only storage",
+    "deploy:staging": "firebase use staging && npm run deploy",
+    "deploy:production": "firebase use production && npm run deploy",
+    "logs": "firebase functions:log",
+    "logs:follow": "firebase functions:log --follow",
+    "backup:firestore": "firebase firestore:export gs://nxtai-production-backups/firestore-$(date +%Y%m%d-%H%M%S)",
+    "restore:firestore": "firebase firestore:import",
+    "security:audit": "npm audit --recursive",
+    "security:fix": "npm audit fix --recursive",
+    "docs:serve": "docsify serve docs",
+    "docs:build": "docsify build docs",
+    "release": "standard-version",
+    "release:major": "standard-version --release-as major",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "postinstall": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iceesurf/nxtai-production.git"
+  },
+  "keywords": [
+    "crm",
+    "marketing-automation",
+    "whatsapp-business",
+    "email-marketing",
+    "multi-tenant",
+    "saas",
+    "firebase",
+    "react",
+    "typescript",
+    "nodejs"
+  ],
+  "author": {
+    "name": "NXT.AI Team",
+    "email": "dev@nxtai.com",
+    "url": "https://nxtai.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iceesurf/nxtai-production/issues"
+  },
+  "homepage": "https://github.com/iceesurf/nxtai-production#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "concurrently": "^8.2.2",
+    "docsify-cli": "^4.4.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "standard-version": "^9.5.0"
+  },
+  "lint-staged": {
+    "packages/web/src/**/*.{js,jsx,ts,tsx}": [
+      "cd packages/web && npm run lint:fix",
+      "cd packages/web && npm run type-check"
+    ],
+    "packages/functions/src/**/*.{js,ts}": [
+      "cd packages/functions && npm run lint:fix"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "build",
+          "ci",
+          "chore",
+          "revert"
+        ]
+      ],
+      "scope-enum": [
+        2,
+        "always",
+        [
+          "web",
+          "functions",
+          "shared",
+          "config",
+          "docs",
+          "ci",
+          "deps"
+        ]
+      ]
+    }
+  },
+  "standard-version": {
+    "scripts": {
+      "prebump": "npm run test && npm run build",
+      "postbump": "npm run deploy:staging"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+

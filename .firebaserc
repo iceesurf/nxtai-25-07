@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "projeto-nxtai",
+    "dev": "nxt-ai-dev",
+    "stg": "nxt-ai-stg",
+    "prod": "projeto-nxtai"
+  },
+  "targets": {},
+  "etags": {}
+}

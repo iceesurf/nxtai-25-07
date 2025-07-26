@@ -1,0 +1,18 @@
+/* TEAM */
+    CEO & Founder: Samuel
+    Contact: samuel@dnxtai.com
+    From: Montes Claros, MG, Brasil
+
+    CTO & Co-Founder: Leo
+    Contact: leo@dnxtai.com
+    From: Montes Claros, MG, Brasil
+
+/* THANKS */
+    UI/UX Design: NXT.AI Team
+    Development: NXT.AI Engineering
+
+/* SITE */
+    Last update: 2025/01/15
+    Language: Portuguese / English
+    Doctype: HTML5
+    IDE: VS Code, Firebase, Next.js

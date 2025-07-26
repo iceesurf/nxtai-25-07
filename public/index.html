@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXT.AI - Chat Inteligente</title>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #9b59b6;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #a9a9b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #chat-container {
+            width: 100%;
+            max-width: 700px;
+            height: 80vh;
+            background-color: var(--card-bg);
+            border: 1px solid var(--neon-purple);
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--neon-purple);
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #message-list {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            background-color: var(--neon-blue);
+            color: var(--dark-bg);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            background-color: #2c2c3e;
+            color: var(--text-secondary);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        #chat-form {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid var(--neon-purple);
+            gap: 10px;
+        }
+
+        #prompt-input {
+            flex-grow: 1;
+            padding: 12px;
+            background-color: #2c2c3e;
+            border: 1px solid var(--neon-purple);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        #prompt-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        #submit-button {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        #submit-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        #submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            display: none; /* Oculto por padrão */
+            align-self: flex-start;
+        }
+        
+        .loader span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+            margin: 0 2px;
+            animation: bounce 1s infinite;
+        }
+
+        .loader span:nth-child(2) { animation-delay: 0.2s; }
+        .loader span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="chat-container">
+        <header class="chat-header">
+            <h1>NXT.AI - Chat Inteligente</h1>
+        </header>
+
+        <div id="message-list">
+            <div class="message bot">Olá! Como posso te ajudar hoje?</div>
+        </div>
+
+        <form id="chat-form">
+            <input type="text" id="prompt-input" placeholder="Digite sua pergunta..." autocomplete="off" required>
+            <button type="submit" id="submit-button">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const promptInput = document.getElementById('prompt-input');
+        const submitButton = document.getElementById('submit-button');
+        const messageList = document.getElementById('message-list');
+        
+        // ATENÇÃO: Substitua pela URL da sua Cloud Function quando fizer o deploy.
+        // Para testes locais com o emulador, a URL será algo como:
+        // http://localhost:5001/SEU_PROJECT_ID/us-central1/api
+        const apiUrl = '/api/ai/chat'; 
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = promptInput.value.trim();
+            if (!prompt) return;
+
+            // Adiciona a mensagem do usuário à lista
+            addMessage(prompt, 'user');
+            promptInput.value = '';
+            
+            // Desabilita o formulário e mostra o loader
+            setLoading(true);
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.erro || 'Ocorreu um erro na API.');
+                }
+
+                const data = await response.json();
+                addMessage(data.resposta, 'bot');
+
+            } catch (error) {
+                console.error('Erro ao chamar a API:', error);
+                addMessage(`Desculpe, ocorreu um erro: ${error.message}`, 'bot');
+            } finally {
+                // Habilita o formulário e esconde o loader
+                setLoading(false);
+            }
+        });
+
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messageList.appendChild(messageDiv);
+            
+            // Scroll para a última mensagem
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        function setLoading(isLoading) {
+            let loader = document.querySelector('.loader');
+            if (isLoading) {
+                submitButton.disabled = true;
+                promptInput.disabled = true;
+                
+                if (!loader) {
+                    loader = document.createElement('div');
+                    loader.className = 'loader';
+                    loader.innerHTML = '<span></span><span></span><span></span>';
+                    messageList.appendChild(loader);
+                    messageList.scrollTop = messageList.scrollHeight;
+                }
+                loader.style.display = 'flex';
+
+            } else {
+                submitButton.disabled = false;
+                promptInput.disabled = false;
+                
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+                promptInput.focus();
+            }
+        }
+    </script>
+
+</body>
+</html>

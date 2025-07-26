@@ -1,0 +1,29 @@
+# Robots.txt for dnxtai.com
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: *.json$
+Disallow: *.xml$
+
+# Sitemaps
+Sitemap: https://dnxtai.com/sitemap.xml
+Sitemap: https://dnxtai.com/sitemap-pages.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Bots específicos
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

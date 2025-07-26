@@ -1,0 +1,175 @@
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // ========== FUNÇÕES AUXILIARES ==========
+    
+    // Verifica se o usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Verifica se o usuário pertence à organização
+    function belongsToOrg(orgId) {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.organizationId == orgId;
+    }
+    
+    // Verifica se é admin da organização
+    function isOrgAdmin(orgId) {
+      return belongsToOrg(orgId) && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'superadmin'];
+    }
+    
+    // Verifica se é superadmin
+    function isSuperAdmin() {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'superadmin';
+    }
+    
+    // Verifica se o arquivo é uma imagem
+    function isImage() {
+      return resource.contentType.matches('image/.*');
+    }
+    
+    // Verifica se o arquivo é um documento
+    function isDocument() {
+      return resource.contentType.matches('application/pdf') ||
+             resource.contentType.matches('application/msword') ||
+             resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+             resource.contentType.matches('text/plain');
+    }
+    
+    // Verifica tamanho do arquivo (em bytes)
+    function isValidSize(maxSize) {
+      return resource.size <= maxSize;
+    }
+    
+    // ========== ARQUIVOS PÚBLICOS ==========
+    
+    // Arquivos públicos (logos, favicons, etc.)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+    
+    // ========== ARQUIVOS DAS ORGANIZAÇÕES ==========
+    
+    // Logos e assets de whitelabel
+    match /organizations/{orgId}/whitelabel/{fileName} {
+      allow read: if true; // Logos são públicos
+      allow write: if isOrgAdmin(orgId) && isImage() && isValidSize(5 * 1024 * 1024); // 5MB max
+    }
+    
+    // Anexos de leads
+    match /organizations/{orgId}/leads/{leadId}/attachments/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     (isImage() || isDocument()) && 
+                     isValidSize(10 * 1024 * 1024); // 10MB max
+      allow delete: if belongsToOrg(orgId) && 
+                      firestore.get(/databases/(default)/documents/organizations/$(orgId)/leads/$(leadId)).data.assignedTo == request.auth.uid ||
+                      firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'manager'];
+    }
+    
+    // Anexos de interações
+    match /organizations/{orgId}/interactions/{interactionId}/attachments/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     (isImage() || isDocument()) && 
+                     isValidSize(10 * 1024 * 1024); // 10MB max
+    }
+    
+    // Anexos de campanhas
+    match /organizations/{orgId}/campaigns/{campaignId}/attachments/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'manager'] &&
+                     (isImage() || isDocument()) && 
+                     isValidSize(10 * 1024 * 1024); // 10MB max
+    }
+    
+    // Templates de email (imagens)
+    match /organizations/{orgId}/templates/{templateId}/images/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'manager'] &&
+                     isImage() && 
+                     isValidSize(5 * 1024 * 1024); // 5MB max
+    }
+    
+    // Avatares de usuários
+    match /organizations/{orgId}/users/{userId}/avatar/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     (request.auth.uid == userId || 
+                      firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin']) &&
+                     isImage() && 
+                     isValidSize(2 * 1024 * 1024); // 2MB max
+    }
+    
+    // Mídia do WhatsApp
+    match /organizations/{orgId}/whatsapp/{conversationId}/media/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     isValidSize(20 * 1024 * 1024); // 20MB max para mídia WhatsApp
+    }
+    
+    // Backups da organização
+    match /organizations/{orgId}/backups/{fileName} {
+      allow read: if isOrgAdmin(orgId);
+      allow write: if false; // Apenas via Cloud Functions
+    }
+    
+    // Exports de dados
+    match /organizations/{orgId}/exports/{fileName} {
+      allow read: if belongsToOrg(orgId) && 
+                    firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'manager'];
+      allow write: if false; // Apenas via Cloud Functions
+      allow delete: if belongsToOrg(orgId) && 
+                      firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'manager'];
+    }
+    
+    // Propostas (PDFs)
+    match /organizations/{orgId}/proposals/{proposalId}/{fileName} {
+      allow read: if belongsToOrg(orgId);
+      allow write: if belongsToOrg(orgId) && 
+                     resource.contentType == 'application/pdf' &&
+                     isValidSize(10 * 1024 * 1024); // 10MB max
+    }
+    
+    // ========== ARQUIVOS TEMPORÁRIOS ==========
+    
+    // Uploads temporários (limpeza automática após 24h)
+    match /temp/{userId}/{fileName} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ========== ARQUIVOS DO SISTEMA ==========
+    
+    // Logs do sistema (apenas superadmin)
+    match /system/logs/{fileName} {
+      allow read: if isSuperAdmin();
+      allow write: if false; // Apenas via Cloud Functions
+    }
+    
+    // Backups globais (apenas superadmin)
+    match /system/backups/{fileName} {
+      allow read: if isSuperAdmin();
+      allow write: if false; // Apenas via Cloud Functions
+    }
+    
+    // ========== REGRA PADRÃO ==========
+    
+    // Negar acesso a qualquer outro arquivo
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
