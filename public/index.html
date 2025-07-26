@@ -3,261 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NXT.AI - Chat Inteligente</title>
-    <style>
-        :root {
-            --neon-pink: #ff00ff;
-            --neon-blue: #00ffff;
-            --neon-purple: #9b59b6;
-            --dark-bg: #0a0a0a;
-            --card-bg: #1a1a2e;
-            --text-primary: #ffffff;
-            --text-secondary: #a9a9b3;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        #chat-container {
-            width: 100%;
-            max-width: 700px;
-            height: 80vh;
-            background-color: var(--card-bg);
-            border: 1px solid var(--neon-purple);
-            border-radius: 15px;
-            box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--neon-purple);
-            text-align: center;
-        }
-
-        .chat-header h1 {
-            font-size: 1.5rem;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #message-list {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            padding: 10px 15px;
-            border-radius: 20px;
-            max-width: 80%;
-            line-height: 1.5;
-        }
-
-        .message.user {
-            background-color: var(--neon-blue);
-            color: var(--dark-bg);
-            align-self: flex-end;
-            border-bottom-right-radius: 5px;
-        }
-
-        .message.bot {
-            background-color: #2c2c3e;
-            color: var(--text-secondary);
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-        }
-
-        #chat-form {
-            display: flex;
-            padding: 20px;
-            border-top: 1px solid var(--neon-purple);
-            gap: 10px;
-        }
-
-        #prompt-input {
-            flex-grow: 1;
-            padding: 12px;
-            background-color: #2c2c3e;
-            border: 1px solid var(--neon-purple);
-            border-radius: 25px;
-            color: var(--text-primary);
-            font-size: 1rem;
-        }
-        
-        #prompt-input:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 10px var(--neon-blue);
-        }
-
-        #submit-button {
-            padding: 12px 25px;
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        #submit-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-        }
-        
-        #submit-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .loader {
-            display: none; /* Oculto por padrão */
-            align-self: flex-start;
-        }
-        
-        .loader span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--text-secondary);
-            margin: 0 2px;
-            animation: bounce 1s infinite;
-        }
-
-        .loader span:nth-child(2) { animation-delay: 0.2s; }
-        .loader span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-8px); }
-        }
-    </style>
+    <title>NXT.AI - Sistemas Sob Medida</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <img src="logo-nxtai.png" alt="NXT.AI" class="logo">
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#services" class="nav-link">Serviços</a>
+                <a href="#about" class="nav-link">Sobre</a>
+                <a href="#contact" class="nav-link">Contato</a>
+                <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+                <button class="btn-register" onclick="openModal('registerModal')">Cadastrar</button>
+            </div>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
 
-    <div id="chat-container">
-        <header class="chat-header">
-            <h1>NXT.AI - Chat Inteligente</h1>
-        </header>
-
-        <div id="message-list">
-            <div class="message bot">Olá! Como posso te ajudar hoje?</div>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    Sistemas <span class="gradient-text">Sob Medida</span><br>
+                    para sua Empresa
+                </h1>
+                <p class="hero-subtitle">
+                    Desenvolvemos soluções tecnológicas personalizadas que transformam 
+                    ideias em realidade digital. Sua empresa merece um sistema único.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="openModal('contactModal')">
+                        <i class="fas fa-rocket"></i>
+                        Começar Projeto
+                    </button>
+                    <button class="btn-secondary" onclick="scrollToSection('services')">
+                        <i class="fas fa-play"></i>
+                        Ver Serviços
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card card-1">
+                    <i class="fas fa-code"></i>
+                    <span>Desenvolvimento</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Mobile</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-cloud"></i>
+                    <span>Cloud</span>
+                </div>
+                <div class="floating-card card-4">
+                    <i class="fas fa-robot"></i>
+                    <span>IA</span>
+                </div>
+            </div>
         </div>
+        <div class="hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+    </section>
 
-        <form id="chat-form">
-            <input type="text" id="prompt-input" placeholder="Digite sua pergunta..." autocomplete="off" required>
-            <button type="submit" id="submit-button">Enviar</button>
-        </form>
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Nossos Serviços</h2>
+                <p class="section-subtitle">Soluções completas para transformar seu negócio</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Desenvolvimento Web</h3>
+                    <p>Sites e aplicações web modernas, responsivas e otimizadas para performance.</p>
+                    <ul>
+                        <li>React & Vue.js</li>
+                        <li>Node.js & Python</li>
+                        <li>Design Responsivo</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Apps Mobile</h3>
+                    <p>Aplicativos nativos e híbridos para iOS e Android com experiência única.</p>
+                    <ul>
+                        <li>React Native</li>
+                        <li>Flutter</li>
+                        <li>UI/UX Design</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Inteligência Artificial</h3>
+                    <p>Soluções de IA para automatizar processos e melhorar a experiência do cliente.</p>
+                    <ul>
+                        <li>Chatbots Inteligentes</li>
+                        <li>Machine Learning</li>
+                        <li>Análise de Dados</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud & DevOps</h3>
+                    <p>Infraestrutura em nuvem escalável e processos de desenvolvimento otimizados.</p>
+                    <ul>
+                        <li>AWS & Google Cloud</li>
+                        <li>Docker & Kubernetes</li>
+                        <li>CI/CD Pipeline</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">Por que escolher a NXT.AI?</h2>
+                    <p>Somos uma empresa de tecnologia especializada em criar soluções sob medida para empresas que buscam inovação e resultados excepcionais.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Desenvolvimento Ágil</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Suporte 24/7</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Tecnologias Modernas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Preços Competitivos</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Projetos Entregues</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Clientes Satisfeitos</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Anos de Experiência</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Entre em Contato</h2>
+                <p class="section-subtitle">Vamos conversar sobre seu próximo projeto</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>samuel@dnxtai.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telefone</h4>
+                            <p>+55 (11) 99999-9999</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Localização</h4>
+                            <p>São Paulo, Brasil</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Seu Nome" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Seu Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Seu Telefone">
+                    </div>
+                    <div class="form-group">
+                        <select id="service" name="service" required>
+                            <option value="">Selecione um serviço</option>
+                            <option value="web">Desenvolvimento Web</option>
+                            <option value="mobile">App Mobile</option>
+                            <option value="ai">Inteligência Artificial</option>
+                            <option value="cloud">Cloud & DevOps</option>
+                            <option value="other">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" placeholder="Descreva seu projeto" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Enviar Mensagem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="logo-nxtai.png" alt="NXT.AI" class="footer-logo">
+                    <p>Transformando ideias em soluções digitais inovadoras.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <a href="#home">Home</a>
+                    <a href="#services">Serviços</a>
+                    <a href="#about">Sobre</a>
+                    <a href="#contact">Contato</a>
+                </div>
+                <div class="footer-social">
+                    <h4>Redes Sociais</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NXT.AI. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login</h3>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            <form class="modal-form" id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Senha" required>
+                </div>
+                <button type="submit" class="btn-modal">Entrar</button>
+                <p class="modal-switch">
+                    Não tem conta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Cadastre-se</a>
+                </p>
+            </form>
+        </div>
     </div>
 
-    <script>
-        const chatForm = document.getElementById('chat-form');
-        const promptInput = document.getElementById('prompt-input');
-        const submitButton = document.getElementById('submit-button');
-        const messageList = document.getElementById('message-list');
-        
-        // ATENÇÃO: Substitua pela URL da sua Cloud Function quando fizer o deploy.
-        // Para testes locais com o emulador, a URL será algo como:
-        // http://localhost:5001/SEU_PROJECT_ID/us-central1/api
-        const apiUrl = '/api/ai/chat'; 
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cadastro</h3>
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            </div>
+            <form class="modal-form" id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="registerName" placeholder="Nome Completo" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Senha" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Confirmar Senha" required>
+                </div>
+                <button type="submit" class="btn-modal">Cadastrar</button>
+                <p class="modal-switch">
+                    Já tem conta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Faça login</a>
+                </p>
+            </form>
+        </div>
+    </div>
 
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const prompt = promptInput.value.trim();
-            if (!prompt) return;
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Iniciar Projeto</h3>
+                <span class="close" onclick="closeModal('contactModal')">&times;</span>
+            </div>
+            <form class="modal-form" id="projectForm">
+                <div class="form-group">
+                    <input type="text" id="projectName" placeholder="Seu Nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="projectEmail" placeholder="Seu Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="projectCompany" placeholder="Empresa">
+                </div>
+                <div class="form-group">
+                    <select id="projectType" required>
+                        <option value="">Tipo de Projeto</option>
+                        <option value="web">Site/Sistema Web</option>
+                        <option value="mobile">Aplicativo Mobile</option>
+                        <option value="ai">Solução com IA</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="custom">Projeto Personalizado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea id="projectDescription" placeholder="Descreva seu projeto" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-modal">Enviar Proposta</button>
+            </form>
+        </div>
+    </div>
 
-            // Adiciona a mensagem do usuário à lista
-            addMessage(prompt, 'user');
-            promptInput.value = '';
-            
-            // Desabilita o formulário e mostra o loader
-            setLoading(true);
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt: prompt }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.erro || 'Ocorreu um erro na API.');
-                }
-
-                const data = await response.json();
-                addMessage(data.resposta, 'bot');
-
-            } catch (error) {
-                console.error('Erro ao chamar a API:', error);
-                addMessage(`Desculpe, ocorreu um erro: ${error.message}`, 'bot');
-            } finally {
-                // Habilita o formulário e esconde o loader
-                setLoading(false);
-            }
-        });
-
-        function addMessage(text, type) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.textContent = text;
-            messageList.appendChild(messageDiv);
-            
-            // Scroll para a última mensagem
-            messageList.scrollTop = messageList.scrollHeight;
-        }
-
-        function setLoading(isLoading) {
-            let loader = document.querySelector('.loader');
-            if (isLoading) {
-                submitButton.disabled = true;
-                promptInput.disabled = true;
-                
-                if (!loader) {
-                    loader = document.createElement('div');
-                    loader.className = 'loader';
-                    loader.innerHTML = '<span></span><span></span><span></span>';
-                    messageList.appendChild(loader);
-                    messageList.scrollTop = messageList.scrollHeight;
-                }
-                loader.style.display = 'flex';
-
-            } else {
-                submitButton.disabled = false;
-                promptInput.disabled = false;
-                
-                if (loader) {
-                    loader.style.display = 'none';
-                }
-                promptInput.focus();
-            }
-        }
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
+

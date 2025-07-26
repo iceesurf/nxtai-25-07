@@ -77,9 +77,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iceesurf/nxtai-production/issues"
+    "url": "https://github.com/iceesurf/nxtai-25-07/issues"
   },
-  "homepage": "https://github.com/iceesurf/nxtai-production#readme",
+  "homepage": "https://github.com/iceesurf/nxtai-25-07#readme",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
