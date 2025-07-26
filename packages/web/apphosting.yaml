@@ -1,0 +1,19 @@
+# Settings for packages/web
+run:
+  build:
+    - npm install
+    - npm run build
+  start: npm run preview
+# The following settings are for a basic Vite app.
+# You may need to adjust these settings for your specific app.
+# For more information, see https://firebase.google.com/docs/hosting/frameworks/vite
+#
+# Optional: To serve static assets, you can add a `static` section.
+# static:
+#   - directory: dist
+#     public: true
+#
+# Optional: To set environment variables, you can add a `env` section.
+# env:
+#   - variable: API_KEY
+#     value: your_api_key

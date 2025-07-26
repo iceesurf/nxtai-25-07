@@ -1,28 +1,35 @@
 {
   "hosting": [
     {
-      "target": "marketing",
-      "public": "packages/marketing/dist",
+      "site": "nxtai-25-07",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "rewrites": [
         {
           "source": "/api/contact",
           "function": "api-contact"
-        },
-        {
-          "source": "**",
-          "destination": "/index.html"
         }
       ]
     },
     {
-      "target": "app",
-      "public": "packages/web/dist",
+      "site": "nxtai-25-07-web",
+      "source": "packages/web",
+      "frameworksBackend": {}
+    },
+    {
+      "site": "nxtai-25-07-marketing",
+      "source": "packages/marketing",
       "rewrites": [
         {
-          "source": "**",
-          "destination": "/index.html"
+          "source": "/api/contact",
+          "function": "api-contact"
         }
-      ]
+      ],
+      "frameworksBackend": {}
     }
   ],
   "functions": [
@@ -30,8 +37,7 @@
       "source": "functions",
       "codebase": "default",
       "predeploy": [
-        "npm --prefix packages/functions install",
-        "npm --prefix packages/functions run build"
+        "npm --prefix functions install"
       ]
     }
   ],
