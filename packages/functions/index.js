@@ -9,4 +9,6 @@ setGlobalOptions({ maxInstances: 10 });
 
 // Import and export functions from their individual files
 const { apiContactFormCreate } = require('./src/contactForm');
+const { createUser } = require('./src/register');
 exports.apiContactFormCreate = apiContactFormCreate;
+exports.createUser = createUser;
