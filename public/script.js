@@ -40,7 +40,7 @@ function switchModal(currentModalId, targetModalId) {
     }, 100);
 }
 
-// Form handling
+// Form handling - ONE SINGLE 'DOMContentLoaded' listener
 document.addEventListener('DOMContentLoaded', function() {
     // Contact form
     const contactForm = document.getElementById('contactForm');
@@ -121,6 +121,22 @@ document.addEventListener('DOMContentLoaded', function() {
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+
+    // Initialize tooltips
+    initTooltips();
+    
+    // Add smooth reveal animation to hero section
+    const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-buttons');
+    heroElements.forEach((element, index) => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(30px)';
+        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        
+        setTimeout(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }, 200 * (index + 1));
+    });
 });
 
 // REAL IMPLEMENTATION for handleContactForm
@@ -130,6 +146,8 @@ async function handleContactForm(form) {
     const data = {
         name: formData.get('name'),
         email: formData.get('email'),
+        phone: formData.get('phone'),
+        service: formData.get('service'),
         message: formData.get('message')
     };
 
@@ -600,21 +618,3 @@ function initTooltips() {
         });
     });
 }
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initTooltips();
-    
-    // Add smooth reveal animation to hero section
-    const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-buttons');
-    heroElements.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        
-        setTimeout(() => {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }, 200 * (index + 1));
-    });
-});
