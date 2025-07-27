@@ -218,38 +218,52 @@ function handleLoginForm(form) {
     }, 1500);
 }
 
-function handleRegisterForm(form) {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    
-    // Validate password confirmation
-    if (data.registerPassword !== data.confirmPassword) {
+async function handleRegisterForm(form) {
+    const name = form.querySelector('#registerName').value;
+    const email = form.querySelector('#registerEmail').value;
+    const password = form.querySelector('#registerPassword').value;
+    const passwordConfirmation = form.querySelector('#confirmPassword').value;
+
+    if (password !== passwordConfirmation) {
         showNotification('As senhas não coincidem.', 'error');
         return;
     }
-    
-    // Add loading state
+
     const submitBtn = form.querySelector('.btn-modal');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
     submitBtn.disabled = true;
-    
-    // Simulate API call
-    setTimeout(() => {
-        console.log('Register data:', data);
-        showNotification('Cadastro realizado com sucesso! Você já pode fazer login.', 'success');
-        closeModal('registerModal');
-        
-        // Reset button
+
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                password,
+                passwordConfirmation
+            }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showNotification('Cadastro realizado com sucesso! Você já pode fazer login.', 'success');
+            form.reset();
+            switchModal('registerModal', 'loginModal');
+        } else {
+            showNotification(`Erro: ${result.error || 'Não foi possível realizar o cadastro.'}`, 'error');
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        showNotification('Erro de conexão. Por favor, tente novamente.', 'error');
+    } finally {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-        form.reset();
-        
-        // Open login modal
-        setTimeout(() => {
-            openModal('loginModal');
-        }, 500);
-    }, 2000);
+    }
 }
 
 function handleProjectForm(form) {

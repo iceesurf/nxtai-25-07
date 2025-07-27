@@ -12,6 +12,10 @@
         {
           "source": "/api/contact",
           "function": "apiContactFormCreate"
+        },
+        {
+          "source": "/api/register",
+          "function": "createUser"
         }
       ]
     },

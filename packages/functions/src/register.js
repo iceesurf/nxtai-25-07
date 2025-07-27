@@ -1,14 +1,12 @@
-const functions = require('firebase-functions');
+const {onRequest} = require("firebase-functions/v2/https");
 const admin = require('firebase-admin');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
 const corsHandler = cors({ origin: true });
 
-admin.initializeApp();
-
-// Função HTTP com validação
-export const createUser = functions.https.onRequest(async (request, response) => {
+// Register
+exports.createUser = onRequest({invoker: "public"}, async (request, response) => {
     corsHandler(request, response, async () => {
       try {
         // Validar método
