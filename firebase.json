@@ -1,46 +1,25 @@
+
 {
-  "hosting": [
-    {
-      "site": "nxtai-25-07",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "/api/**",
-          "run": {
-            "serviceId": "api-backend",
-            "region": "us-central1"
-          }
-        }
-      ]
-    },
-    {
-      "site": "nxtai-25-07-web",
-      "source": "packages/web",
-      "frameworksBackend": {
-        "serviceId": "api-backend",
-        "region": "us-central1"
+  "hosting": {
+    "site": "nxtai-25-07",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
       }
-    },
-    {
-      "site": "nxtai-25-07-api",
-      "source": "packages/functions",
-      "frameworksBackend": {
-        "serviceId": "api-backend",
-        "region": "us-central1"
-      }
-    }
-  ],
+    ]
+  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
   "functions": {
-    "source": "packages/functions",
-    "codebase": "api-backend"
+    "source": "packages/functions"
   }
 }
