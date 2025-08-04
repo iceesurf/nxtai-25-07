@@ -1,100 +1,30 @@
 // Smooth scrolling for navigation links
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    }
-}
-
-// Modal functions
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        
-        // Add click outside to close
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal(modalId);
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for navigation links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
-    }
-}
-
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-}
-
-function switchModal(currentModalId, targetModalId) {
-    closeModal(currentModalId);
-    setTimeout(() => {
-        openModal(targetModalId);
-    }, 100);
-}
-
-// Form handling - ONE SINGLE 'DOMContentLoaded' listener
-document.addEventListener('DOMContentLoaded', function() {
-    // Contact form
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleContactForm(this);
-        });
-    }
-
-    // Login form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleLoginForm(this);
-        });
-    }
-
-    // Register form
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleRegisterForm(this);
-        });
-    }
-
-    // Project form
-    const projectForm = document.getElementById('projectForm');
-    if (projectForm) {
-        projectForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleProjectForm(this);
-        });
-    }
-
-    // Mobile menu toggle
-    const mobileToggle = document.querySelector('.mobile-menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (mobileToggle && navMenu) {
-        mobileToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
-    }
+    });
 
     // Header scroll effect
+    const header = document.querySelector('.header');
     window.addEventListener('scroll', function() {
-        const header = document.querySelector('.header');
         if (window.scrollY > 100) {
-            header.style.background = 'rgba(15, 15, 35, 0.98)';
+            header.style.background = 'rgba(255, 255, 255, 0.98)';
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
         } else {
-            header.style.background = 'rgba(15, 15, 35, 0.95)';
+            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.boxShadow = 'none';
         }
     });
 
@@ -113,179 +43,198 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
-    // Observe elements for animation
-    const animateElements = document.querySelectorAll('.service-card, .stat, .contact-item');
-    animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+    // Observe service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
     });
 
-    // Initialize tooltips
-    initTooltips();
+    // Observe feature items
+    const featureItems = document.querySelectorAll('.feature-item');
+    featureItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(30px)';
+        item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(item);
+    });
+
+    // Mobile menu toggle
+    const mobileToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     
-    // Add smooth reveal animation to hero section
-    const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-buttons');
-    heroElements.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    // Form submissions
+    const contactForm = document.getElementById('contactForm');
+    const registerForm = document.getElementById('registerForm');
+    const projectForm = document.getElementById('projectForm');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', handleContactSubmit);
+    }
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegisterSubmit);
+    }
+
+    if (projectForm) {
+        projectForm.addEventListener('submit', handleProjectSubmit);
+    }
+
+    // Add hover effects to service cards
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Add parallax effect to hero background
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector('.hero-bg');
+        if (parallax) {
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        }
+    });
+
+    // Add typing effect to hero title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const text = heroTitle.innerHTML;
+        heroTitle.innerHTML = '';
+        let i = 0;
         
+        function typeWriter() {
+            if (i < text.length) {
+                heroTitle.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+    }
+});
+
+// Modal functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Add animation
         setTimeout(() => {
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }, 200 * (index + 1));
+            modal.style.opacity = '1';
+        }, 10);
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            closeModal(modal.id);
+        }
     });
 });
 
-// REAL IMPLEMENTATION for handleContactForm
-async function handleContactForm(form) {
-    console.log('handleContactForm called')
-    const formData = new FormData(form);
-    const data = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        service: formData.get('service'),
-        message: formData.get('message')
-    };
+// Scroll to section function
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
 
-    const submitBtn = form.querySelector('.btn-submit');
+// Form submission handlers
+function handleContactSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    // Show loading state
+    const submitBtn = e.target.querySelector('.btn-submit');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     submitBtn.disabled = true;
-
-    // The API URL will be '/api/contact' because of the rewrite in firebase.json
-    const apiUrl = '/api/contact';
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
-            form.reset();
-        } else {
-            const errorData = await response.json();
-            showNotification(`Erro: ${errorData.error || 'Não foi possível enviar a mensagem.'}`, 'error');
-        }
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        showNotification('Erro de conexão. Por favor, tente novamente.', 'error');
-    } finally {
-        // Reset button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-
-function handleLoginForm(form) {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
     
-    // Add loading state
-    const submitBtn = form.querySelector('.btn-modal');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
-    submitBtn.disabled = true;
-    
-    // Simulate API call
+    // Simulate form submission
     setTimeout(() => {
-        console.log('Login data:', data);
-        
-        // Simulate login validation
-        if (data.loginEmail && data.loginPassword) {
-            showNotification('Login realizado com sucesso!', 'success');
-            closeModal('loginModal');
-            
-            // Update UI for logged in state
-            updateUIForLoggedInUser(data.loginEmail);
-        } else {
-            showNotification('Por favor, preencha todos os campos.', 'error');
-        }
-        
-        // Reset button
+        showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+        e.target.reset();
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-        form.reset();
-    }, 1500);
+    }, 2000);
 }
 
-async function handleRegisterForm(form) {
-    const name = form.querySelector('#registerName').value;
-    const email = form.querySelector('#registerEmail').value;
-    const password = form.querySelector('#registerPassword').value;
-    const passwordConfirmation = form.querySelector('#confirmPassword').value;
-
-    if (password !== passwordConfirmation) {
-        showNotification('As senhas não coincidem.', 'error');
+function handleRegisterSubmit(e) {
+    e.preventDefault();
+    
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        showNotification('As senhas não coincidem!', 'error');
         return;
     }
-
-    const submitBtn = form.querySelector('.btn-modal');
+    
+    const submitBtn = e.target.querySelector('.btn-modal');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
     submitBtn.disabled = true;
-
-    try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                email,
-                password,
-                passwordConfirmation
-            }),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            showNotification('Cadastro realizado com sucesso! Você já pode fazer login.', 'success');
-            form.reset();
-            switchModal('registerModal', 'loginModal');
-        } else {
-            showNotification(`Erro: ${result.error || 'Não foi possível realizar o cadastro.'}`, 'error');
-        }
-    } catch (error) {
-        console.error('Fetch Error:', error);
-        showNotification('Erro de conexão. Por favor, tente novamente.', 'error');
-    } finally {
+    
+    setTimeout(() => {
+        showNotification('Cadastro realizado com sucesso! Verifique seu email.', 'success');
+        closeModal('registerModal');
+        e.target.reset();
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }
+    }, 2000);
 }
 
-function handleProjectForm(form) {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+function handleProjectSubmit(e) {
+    e.preventDefault();
     
-    // Add loading state
-    const submitBtn = form.querySelector('.btn-modal');
+    const submitBtn = e.target.querySelector('.btn-modal');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
     submitBtn.disabled = true;
     
-    // Simulate API call
     setTimeout(() => {
-        console.log('Project form data:', data);
-        showNotification('Proposta enviada com sucesso! Nossa equipe entrará em contato em até 24 horas.', 'success');
+        showNotification('Proposta enviada com sucesso! Nossa equipe entrará em contato.', 'success');
         closeModal('contactModal');
-        
-        // Reset button
+        e.target.reset();
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-        form.reset();
     }, 2000);
 }
 
@@ -295,7 +244,6 @@ function showNotification(message, type = 'info') {
     const existingNotifications = document.querySelectorAll('.notification');
     existingNotifications.forEach(notification => notification.remove());
     
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
@@ -311,28 +259,24 @@ function showNotification(message, type = 'info') {
     // Add styles
     notification.style.cssText = `
         position: fixed;
-        top: 100px;
+        top: 20px;
         right: 20px;
-        z-index: 3000;
         background: ${getNotificationColor(type)};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 12px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 3000;
         animation: slideInRight 0.3s ease-out;
         max-width: 400px;
-        word-wrap: break-word;
     `;
     
-    // Add to DOM
     document.body.appendChild(notification);
     
     // Auto remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
-            notification.style.animation = 'slideOutRight 0.3s ease-in';
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
             setTimeout(() => notification.remove(), 300);
         }
     }, 5000);
@@ -349,91 +293,35 @@ function getNotificationIcon(type) {
 
 function getNotificationColor(type) {
     switch (type) {
-        case 'success': return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        case 'error': return 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        case 'warning': return 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
-        default: return 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+        case 'success': return '#10b981';
+        case 'error': return '#ef4444';
+        case 'warning': return '#f59e0b';
+        default: return '#6366f1';
     }
 }
 
-// Update UI for logged in user
-function updateUIForLoggedInUser(email) {
-    const loginBtn = document.querySelector('.btn-login');
-    const registerBtn = document.querySelector('.btn-register');
-    
-    if (loginBtn && registerBtn) {
-        // Replace login/register buttons with user menu
-        const userMenu = document.createElement('div');
-        userMenu.className = 'user-menu';
-        userMenu.innerHTML = `
-            <div class="user-info">
-                <i class="fas fa-user-circle"></i>
-                <span>${email.split('@')[0]}</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="user-dropdown">
-                <a href="#" onclick="showNotification('Redirecionando para o dashboard...', 'info')">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-                <a href="#" onclick="showNotification('Redirecionando para o perfil...', 'info')">
-                    <i class="fas fa-user"></i> Perfil
-                </a>
-                <a href="#" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </a>
-            </div>
-        `;
-        
-        // Add styles for user menu
-        userMenu.style.cssText = `
-            position: relative;
-            cursor: pointer;
-        `;
-        
-        // Replace buttons
-        loginBtn.parentElement.replaceChild(userMenu, loginBtn);
-        registerBtn.remove();
-        
-        // Add dropdown functionality
-        userMenu.addEventListener('click', function() {
-            const dropdown = this.querySelector('.user-dropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        });
-    }
-}
-
-// Logout function
-function logout() {
-    showNotification('Logout realizado com sucesso!', 'success');
-    
-    // Reload page to reset UI
-    setTimeout(() => {
-        location.reload();
-    }, 1000);
-}
-
-// Add CSS animations
+// Add CSS animations for notifications
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
         from {
-            opacity: 0;
             transform: translateX(100%);
+            opacity: 0;
         }
         to {
-            opacity: 1;
             transform: translateX(0);
+            opacity: 1;
         }
     }
     
     @keyframes slideOutRight {
         from {
-            opacity: 1;
             transform: translateX(0);
+            opacity: 1;
         }
         to {
-            opacity: 0;
             transform: translateX(100%);
+            opacity: 0;
         }
     }
     
@@ -449,186 +337,153 @@ style.textContent = `
         color: white;
         cursor: pointer;
         padding: 0.25rem;
-        border-radius: 4px;
-        transition: background-color 0.2s;
+        margin-left: auto;
+        opacity: 0.8;
+        transition: opacity 0.2s;
     }
     
     .notification-close:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    .user-menu {
-        position: relative;
-    }
-    
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: rgba(139, 92, 246, 0.1);
-        border: 1px solid var(--primary-purple);
-        border-radius: 12px;
-        color: var(--text-light);
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    
-    .user-info:hover {
-        background: rgba(139, 92, 246, 0.2);
-        transform: translateY(-2px);
-    }
-    
-    .user-dropdown {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: var(--dark-bg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 0.5rem 0;
-        min-width: 200px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(20px);
-        z-index: 1000;
-        margin-top: 0.5rem;
-    }
-    
-    .user-dropdown a {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        color: var(--text-light);
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-    
-    .user-dropdown a:hover {
-        background: rgba(139, 92, 246, 0.1);
+        opacity: 1;
     }
     
     @media (max-width: 768px) {
         .nav-menu.active {
             display: flex;
-            position: fixed;
-            top: 80px;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
             left: 0;
             right: 0;
-            background: var(--dark-bg);
-            flex-direction: column;
-            padding: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         
-        .notification {
-            right: 10px;
-            left: 10px;
-            max-width: none;
+        .nav-menu.active .nav-link {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .nav-menu.active .nav-link:last-child {
+            border-bottom: none;
         }
     }
 `;
 document.head.appendChild(style);
 
-// Keyboard navigation
-document.addEventListener('keydown', function(e) {
-    // Close modals with Escape key
-    if (e.key === 'Escape') {
-        const openModals = document.querySelectorAll('.modal[style*="block"]');
-        openModals.forEach(modal => {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-    }
-});
-
-// Prevent form submission on Enter in input fields (except textarea)
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
-        e.preventDefault();
-    }
-});
-
-// Add loading states to buttons
-function addLoadingState(button, loadingText = 'Carregando...') {
-    const originalText = button.innerHTML;
-    button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`;
-    button.disabled = true;
+// Add loading animation for page
+window.addEventListener('load', function() {
+    const loader = document.createElement('div');
+    loader.id = 'page-loader';
+    loader.innerHTML = `
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <p>Carregando...</p>
+        </div>
+    `;
     
-    return function removeLoadingState() {
-        button.innerHTML = originalText;
-        button.disabled = false;
-    };
-}
-
-// Utility function for API calls (placeholder)
-async function apiCall(endpoint, data = null, method = 'GET') {
-    try {
-        const options = {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        };
-        
-        if (data && method !== 'GET') {
-            options.body = JSON.stringify(data);
+    loader.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        color: white;
+        font-family: 'Inter', sans-serif;
+    `;
+    
+    const loaderStyle = document.createElement('style');
+    loaderStyle.textContent = `
+        .loader-content {
+            text-align: center;
         }
         
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
         
-        // Simulate response
-        return {
-            success: true,
-            data: data,
-            message: 'Operação realizada com sucesso!'
-        };
-    } catch (error) {
-        console.error('API Error:', error);
-        return {
-            success: false,
-            error: error.message
-        };
-    }
-}
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(loaderStyle);
+    document.body.appendChild(loader);
+    
+    // Remove loader after a short delay
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => loader.remove(), 500);
+    }, 1500);
+});
 
-// Initialize tooltips (if needed)
-function initTooltips() {
-    const tooltipElements = document.querySelectorAll('[data-tooltip]');
-    tooltipElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
-            tooltip.textContent = this.getAttribute('data-tooltip');
-            tooltip.style.cssText = `
-                position: absolute;
-                background: var(--dark-bg);
-                color: var(--text-light);
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                font-size: 0.875rem;
-                white-space: nowrap;
-                z-index: 1000;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                pointer-events: none;
-            `;
-            
-            document.body.appendChild(tooltip);
-            
-            const rect = this.getBoundingClientRect();
-            tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
-            tooltip.style.top = rect.top - tooltip.offsetHeight - 8 + 'px';
-        });
-        
-        element.addEventListener('mouseleave', function() {
-            const tooltip = document.querySelector('.tooltip');
-            if (tooltip) {
-                tooltip.remove();
-            }
-        });
+// Add scroll progress indicator
+const progressBar = document.createElement('div');
+progressBar.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #6366f1, #ec4899);
+    z-index: 1001;
+    transition: width 0.1s ease;
+`;
+document.body.appendChild(progressBar);
+
+window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+    progressBar.style.width = scrollPercent + '%';
+});
+
+// Add easter egg - Konami code
+let konamiCode = [];
+const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+
+document.addEventListener('keydown', function(e) {
+    konamiCode.push(e.keyCode);
+    if (konamiCode.length > konamiSequence.length) {
+        konamiCode.shift();
+    }
+    
+    if (konamiCode.join(',') === konamiSequence.join(',')) {
+        showNotification('🎉 Código Konami ativado! Você desbloqueou o modo desenvolvedor!', 'success');
+        document.body.style.filter = 'hue-rotate(180deg)';
+        setTimeout(() => {
+            document.body.style.filter = 'none';
+        }, 3000);
+        konamiCode = [];
+    }
+});
+
+// Performance optimization - Lazy loading for images
+const images = document.querySelectorAll('img[data-src]');
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            imageObserver.unobserve(img);
+        }
     });
-}
+});
+
+images.forEach(img => imageObserver.observe(img));
+

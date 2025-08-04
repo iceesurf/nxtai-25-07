@@ -1,0 +1,8 @@
+# packages/functions/apphosting.yaml
+run:
+  cmd: npm run start
+  cpu: 0.1
+  memory_mib: 128
+env:
+  - variable: GCLOUD_PROJECT
+    value: nxtai-25-07

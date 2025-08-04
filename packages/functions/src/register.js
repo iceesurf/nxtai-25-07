@@ -1,55 +1,62 @@
-const {onRequest} = require("firebase-functions/v2/https");
-const admin = require('firebase-admin');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
+const admin = require("firebase-admin");
+const { getFirestore } = require("firebase-admin/firestore");
 
-const corsHandler = cors({ origin: true });
+exports.registerUserHandler = async (req, res) => {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method Not Allowed' });
+    }
 
-// Register
-exports.createUser = onRequest({invoker: "public"}, async (request, response) => {
-    corsHandler(request, response, async () => {
-      try {
-        // Validar método
-        if (request.method !== 'POST') {
-          response.status(405).json({ error: 'Method not allowed' });
-          return;
-        }
-  
-        // Pegar dados do body
-        const { name, email, password, passwordConfirmation } = request.body;
-  
-        // Validar dados
-        if (!name || !email || !password || !passwordConfirmation) {
-          response.status(400).json({ error: 'Name, email, password and password confirmation are required' });
-          return;
-        }
+    const { email, password, name } = req.body;
 
-        if (password !== passwordConfirmation) {
-          response.status(400).json({ error: 'Passwords do not match' });
-          return;
-        }
+    // Basic validation
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Missing required fields: email, password, and name.' });
+    }
+    
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+    }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-  
-        // Criar usuário no Firestore
-        const db = admin.firestore();
-        const userRef = await db.collection('users').add({
-          name,
-          email,
-          password: hashedPassword,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-  
-        response.status(201).json({
-          success: true,
-          id: userRef.id,
-          message: 'User created successfully',
-        });
-  
-      } catch (error) {
-        console.error('Error creating user:', error);
-        response.status(500).json({ error: 'Internal server error' });
+    try {
+      // 1. Create the user in Firebase Authentication
+      const userRecord = await admin.auth().createUser({
+        email: email,
+        password: password,
+        displayName: name,
+      });
+
+      console.log("Successfully created new user in Auth:", userRecord.uid);
+      
+      // 2. Directly create the user profile in Firestore
+      const db = getFirestore();
+      const userRef = db.collection('users').doc(userRecord.uid);
+
+      await userRef.set({
+        email: userRecord.email,
+        displayName: userRecord.displayName || null,
+        photoURL: userRecord.photoURL || null,
+        createdAt: new Date().toISOString(),
+        isActive: true,
+      });
+      
+      console.log(`Successfully created user profile in Firestore for UID: ${userRecord.uid}`);
+
+      // 3. Respond with success after both operations are complete
+      return res.status(201).json({
+        success: true,
+        message: 'User registered successfully!',
+        uid: userRecord.uid
+      });
+
+    } catch (error) {
+      console.error("Error creating new user:", error);
+      
+      if (error.code === 'auth/email-already-exists') {
+        return res.status(409).json({ error: 'The email address is already in use by another account.' });
+      } else if (error.code === 'auth/invalid-email') {
+        return res.status(400).json({ error: 'The email address is not valid.' });
       }
-    });
-  });
+      
+      return res.status(500).json({ error: 'Internal server error while creating user.' });
+    }
+}

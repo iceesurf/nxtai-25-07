@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NXT.AI - Sistemas Sob Medida</title>
+    <title>NXT.AI - Plataforma Completa de Marketing e CRM</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header --> 
+    <!-- Header -->
     <header class="header">
         <nav class="nav">
             <div class="nav-brand">
@@ -17,10 +17,10 @@
             </div>
             <div class="nav-menu">
                 <a href="#home" class="nav-link">Home</a>
-                <a href="#services" class="nav-link">Serviços</a>
+                <a href="#solutions" class="nav-link">Soluções</a>
                 <a href="#about" class="nav-link">Sobre</a>
                 <a href="#contact" class="nav-link">Contato</a>
-                <button class="btn-login" onclick="openModal('loginModal')">Login</button>
+                <a href="#" class="btn-login">Login</a>
                 <button class="btn-register" onclick="openModal('registerModal')">Cadastrar</button>
             </div>
             <div class="mobile-menu-toggle">
@@ -34,40 +34,39 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">
-                    Sistemas <span class="gradient-text">Sob Medida</span><br>
-                    para sua Empresa
+                    Plataforma Completa de <span class="gradient-text">Marketing e Vendas</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Desenvolvemos soluções tecnológicas personalizadas que transformam 
-                    ideias em realidade digital. Sua empresa merece um sistema único.
+                    Centralize sua gestão de leads, automatize seu marketing e crie sites incríveis.
+                    Tudo em um só lugar com o poder da Inteligência Artificial.
                 </p>
                 <div class="hero-buttons">
                     <button class="btn-primary" onclick="openModal('contactModal')">
                         <i class="fas fa-rocket"></i>
-                        Começar Projeto
+                        Começar Agora
                     </button>
-                    <button class="btn-secondary" onclick="scrollToSection('services')">
+                    <button class="btn-secondary" onclick="scrollToSection('solutions')">
                         <i class="fas fa-play"></i>
-                        Ver Serviços
+                        Ver Soluções
                     </button>
                 </div>
             </div>
             <div class="hero-visual">
                 <div class="floating-card card-1">
-                    <i class="fas fa-code"></i>
-                    <span>Desenvolvimento</span>
+                    <i class="fas fa-users-gear"></i>
+                    <span>CRM</span>
                 </div>
                 <div class="floating-card card-2">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>Mobile</span>
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Marketing</span>
                 </div>
                 <div class="floating-card card-3">
-                    <i class="fas fa-cloud"></i>
-                    <span>Cloud</span>
+                    <i class="fas fa-robot"></i>
+                    <span>Automação</span>
                 </div>
                 <div class="floating-card card-4">
-                    <i class="fas fa-robot"></i>
-                    <span>IA</span>
+                    <i class="fas fa-store"></i>
+                    <span>E-commerce</span>
                 </div>
             </div>
         </div>
@@ -78,61 +77,165 @@
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
+    <!-- Solutions Section -->
+    <section id="solutions" class="services">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Nossos Serviços</h2>
-                <p class="section-subtitle">Soluções completas para transformar seu negócio</p>
+                <h2 class="section-title">Nossas Soluções</h2>
+                <p class="section-subtitle">Ferramentas poderosas para impulsionar seu crescimento</p>
             </div>
             <div class="services-grid">
+                <div class="service-card featured">
+                    <div class="service-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <h3>CRM e Gestão de Leads</h3>
+                    <p>Sistema completo para organizar, rastrear e converter seus leads em clientes.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Gestão completa de leads</li>
+                        <li><i class="fas fa-check"></i> Funil de vendas visual</li>
+                        <li><i class="fas fa-check"></i> Histórico de interações</li>
+                        <li><i class="fas fa-check"></i> Relatórios avançados</li>
+                    </ul>
+                    <div class="service-badge">Mais Popular</div>
+                </div>
+
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-laptop-code"></i>
+                        <i class="fas fa-sitemap"></i>
                     </div>
-                    <h3>Desenvolvimento Web</h3>
-                    <p>Sites e aplicações web modernas, responsivas e otimizadas para performance.</p>
+                    <h3>Automação de Marketing</h3>
+                    <p>Crie jornadas personalizadas e automatize toda sua comunicação.</p>
                     <ul>
-                        <li>React & Vue.js</li>
-                        <li>Node.js & Python</li>
-                        <li>Design Responsivo</li>
+                        <li><i class="fas fa-check"></i> Editor de fluxograma intuitivo</li>
+                        <li><i class="fas fa-check"></i> Marketing por E-mail</li>
+                        <li><i class="fas fa-check"></i> Instagram e Facebook Ads</li>
+                        <li><i class="fas fa-check"></i> WhatsApp Business</li>
                     </ul>
                 </div>
+
                 <div class="service-card">
                     <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Agente IA & Chat 24h</h3>
+                    <p>Atendimento inteligente 24/7 para qualificar leads e dar suporte.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Chat online 24h com IA</li>
+                        <li><i class="fas fa-check"></i> Qualificação automática</li>
+                        <li><i class="fas fa-check"></i> Integração com CRM</li>
+                        <li><i class="fas fa-check"></i> Respostas personalizadas</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO e Otimização</h3>
+                    <p>Apareça no topo das buscas do Google e aumente sua visibilidade.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> SEO para Google</li>
+                        <li><i class="fas fa-check"></i> Análise de palavras-chave</li>
+                        <li><i class="fas fa-check"></i> Otimização de conteúdo</li>
+                        <li><i class="fas fa-check"></i> Relatórios de performance</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Construtor de Sites</h3>
+                    <p>Crie sites profissionais com templates modernos e responsivos.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Vários templates profissionais</li>
+                        <li><i class="fas fa-check"></i> Editor drag & drop</li>
+                        <li><i class="fas fa-check"></i> Design responsivo</li>
+                        <li><i class="fas fa-check"></i> Otimizado para conversão</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>E-commerce Completo</h3>
+                    <p>Plataforma completa para criar e gerenciar sua loja virtual.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Loja virtual completa</li>
+                        <li><i class="fas fa-check"></i> Gestão de produtos</li>
+                        <li><i class="fas fa-check"></i> Pagamentos integrados</li>
+                        <li><i class="fas fa-check"></i> Controle de estoque</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3>Whitelabel & Domínio</h3>
+                    <p>Solução completa com sua marca e domínio profissional.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Whitelabel completo</li>
+                        <li><i class="fas fa-check"></i> Domínio personalizado</li>
+                        <li><i class="fas fa-check"></i> E-mail profissional</li>
+                        <li><i class="fas fa-check"></i> SSL incluído</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics & Relatórios</h3>
+                    <p>Acompanhe o desempenho com relatórios detalhados e insights.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Dashboard completo</li>
+                        <li><i class="fas fa-check"></i> Métricas de conversão</li>
+                        <li><i class="fas fa-check"></i> ROI de campanhas</li>
+                        <li><i class="fas fa-check"></i> Relatórios personalizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tudo Integrado em Uma Plataforma</h2>
+                <p class="section-subtitle">Conecte todas as suas ferramentas de marketing e vendas</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h4>Integração Total</h4>
+                    <p>Todas as ferramentas trabalham juntas de forma sincronizada</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3>Apps Mobile</h3>
-                    <p>Aplicativos nativos e híbridos para iOS e Android com experiência única.</p>
-                    <ul>
-                        <li>React Native</li>
-                        <li>Flutter</li>
-                        <li>UI/UX Design</li>
-                    </ul>
+                    <h4>100% Responsivo</h4>
+                    <p>Acesse de qualquer dispositivo, a qualquer hora</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-robot"></i>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Inteligência Artificial</h3>
-                    <p>Soluções de IA para automatizar processos e melhorar a experiência do cliente.</p>
-                    <ul>
-                        <li>Chatbots Inteligentes</li>
-                        <li>Machine Learning</li>
-                        <li>Análise de Dados</li>
-                    </ul>
+                    <h4>Segurança Total</h4>
+                    <p>Seus dados protegidos com criptografia de ponta</p>
                 </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-cloud"></i>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headphones"></i>
                     </div>
-                    <h3>Cloud & DevOps</h3>
-                    <p>Infraestrutura em nuvem escalável e processos de desenvolvimento otimizados.</p>
-                    <ul>
-                        <li>AWS & Google Cloud</li>
-                        <li>Docker & Kubernetes</li>
-                        <li>CI/CD Pipeline</li>
-                    </ul>
+                    <h4>Suporte 24/7</h4>
+                    <p>Equipe especializada sempre disponível para ajudar</p>
                 </div>
             </div>
         </div>
@@ -144,38 +247,38 @@
             <div class="about-content">
                 <div class="about-text">
                     <h2 class="section-title">Por que escolher a NXT.AI?</h2>
-                    <p>Somos uma empresa de tecnologia especializada em criar soluções sob medida para empresas que buscam inovação e resultados excepcionais.</p>
+                    <p>Somos uma empresa de tecnologia especializada em criar soluções completas de marketing e vendas para empresas que buscam crescimento acelerado e resultados excepcionais.</p>
                     <div class="features">
                         <div class="feature">
                             <i class="fas fa-check-circle"></i>
-                            <span>Desenvolvimento Ágil</span>
+                            <span>Soluções Integradas</span>
                         </div>
                         <div class="feature">
                             <i class="fas fa-check-circle"></i>
-                            <span>Suporte 24/7</span>
+                            <span>Suporte Dedicado</span>
                         </div>
                         <div class="feature">
                             <i class="fas fa-check-circle"></i>
-                            <span>Tecnologias Modernas</span>
+                            <span>Tecnologia de Ponta</span>
                         </div>
                         <div class="feature">
                             <i class="fas fa-check-circle"></i>
-                            <span>Preços Competitivos</span>
+                            <span>Foco em Resultados</span>
                         </div>
                     </div>
                 </div>
                 <div class="about-stats">
                     <div class="stat">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Projetos Entregues</div>
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Empresas Atendidas</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Clientes Satisfeitos</div>
+                        <div class="stat-number">1M+</div>
+                        <div class="stat-label">Leads Gerenciados</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">5+</div>
-                        <div class="stat-label">Anos de Experiência</div>
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Satisfação dos Clientes</div>
                     </div>
                 </div>
             </div>
@@ -187,7 +290,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Entre em Contato</h2>
-                <p class="section-subtitle">Vamos conversar sobre seu próximo projeto</p>
+                <p class="section-subtitle">Vamos conversar sobre como impulsionar seu negócio</p>
             </div>
             <div class="contact-content">
                 <div class="contact-info">
@@ -202,7 +305,7 @@
                         <i class="fas fa-phone"></i>
                         <div>
                             <h4>Telefone</h4>
-                            <p>+55 (38) 9 9182 3797 </p>
+                            <p>+55 (38) 9 9182 3797</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -225,11 +328,14 @@
                     </div>
                     <div class="form-group">
                         <select id="service" name="service" required>
-                            <option value="">Selecione um serviço</option>
-                            <option value="web">Desenvolvimento Web</option>
-                            <option value="mobile">App Mobile</option>
-                            <option value="ai">Inteligência Artificial</option>
-                            <option value="cloud">Cloud & DevOps</option>
+                            <option value="">Selecione uma solução</option>
+                            <option value="crm">CRM e Gestão de Leads</option>
+                            <option value="marketing">Automação de Marketing</option>
+                            <option value="ai">Agente IA & Chat</option>
+                            <option value="seo">SEO e Otimização</option>
+                            <option value="sites">Construtor de Sites</option>
+                            <option value="ecommerce">E-commerce</option>
+                            <option value="whitelabel">Whitelabel & Domínio</option>
                             <option value="other">Outro</option>
                         </select>
                     </div>
@@ -251,12 +357,12 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <img src="logo-nxtai.png" alt="NXT.AI" class="footer-logo">
-                    <p>Transformando ideias em soluções digitais inovadoras.</p>
+                    <p>Transformando negócios com soluções completas de marketing e vendas.</p>
                 </div>
                 <div class="footer-links">
                     <h4>Links Rápidos</h4>
                     <a href="#home">Home</a>
-                    <a href="#services">Serviços</a>
+                    <a href="#solutions">Soluções</a>
                     <a href="#about">Sobre</a>
                     <a href="#contact">Contato</a>
                 </div>
@@ -275,28 +381,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Login</h3>
-                <span class="close" onclick="closeModal('loginModal')">&times;</span>
-            </div>
-            <form class="modal-form" id="loginForm">
-                <div class="form-group">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" placeholder="Senha" required>
-                </div>
-                <button type="submit" class="btn-modal">Entrar</button>
-                <p class="modal-switch">
-                    Não tem conta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Cadastre-se</a>
-                </p>
-            </form>
-        </div>
-    </div>
 
     <!-- Register Modal -->
     <div id="registerModal" class="modal">
@@ -319,9 +403,6 @@
                     <input type="password" id="confirmPassword" placeholder="Confirmar Senha" required>
                 </div>
                 <button type="submit" class="btn-modal">Cadastrar</button>
-                <p class="modal-switch">
-                    Já tem conta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Faça login</a>
-                </p>
             </form>
         </div>
     </div>
@@ -330,7 +411,7 @@
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Iniciar Projeto</h3>
+                <h3>Começar Agora</h3>
                 <span class="close" onclick="closeModal('contactModal')">&times;</span>
             </div>
             <form class="modal-form" id="projectForm">
@@ -345,29 +426,24 @@
                 </div>
                 <div class="form-group">
                     <select id="projectType" required>
-                        <option value="">Tipo de Projeto</option>
-                        <option value="web">Site/Sistema Web</option>
-                        <option value="mobile">Aplicativo Mobile</option>
-                        <option value="ai">Solução com IA</option>
+                        <option value="">Tipo de Solução</option>
+                        <option value="crm">CRM e Gestão de Leads</option>
+                        <option value="marketing">Automação de Marketing</option>
+                        <option value="ai">Agente IA & Chat</option>
+                        <option value="sites">Construtor de Sites</option>
                         <option value="ecommerce">E-commerce</option>
-                        <option value="custom">Projeto Personalizado</option>
+                        <option value="completo">Solução Completa</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <textarea id="projectDescription" placeholder="Descreva seu projeto" rows="4" required></textarea>
+                    <textarea id="projectDescription" placeholder="Descreva suas necessidades" rows="4" required></textarea>
                 </div>
-                <button type="submit" class="btn-modal">Enviar Proposta</button>
+                <button type="submit" class="btn-modal">Solicitar Proposta</button>
             </form>
         </div>
     </div>
 
-
-
     <script src="script.js"></script>
-
-<script>
-        console.log('oi 2')
-</script>
 </body>
 </html>
 

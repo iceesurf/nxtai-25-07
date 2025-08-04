@@ -10,43 +10,37 @@
       ],
       "rewrites": [
         {
-          "source": "/api/contact",
-          "function": "apiContactFormCreate"
-        },
-        {
-          "source": "/api/register",
-          "function": "createUser"
+          "source": "/api/**",
+          "run": {
+            "serviceId": "api-backend",
+            "region": "us-central1"
+          }
         }
       ]
     },
     {
       "site": "nxtai-25-07-web",
       "source": "packages/web",
-      "frameworksBackend": {}
+      "frameworksBackend": {
+        "serviceId": "api-backend",
+        "region": "us-central1"
+      }
     },
     {
-      "site": "nxtai-25-07-marketing",
-      "source": "packages/marketing",
-      "rewrites": [
-        {
-          "source": "/api/contact",
-          "function": "apiContactFormCreate"
-        }
-      ],
-      "frameworksBackend": {}
-    }
-  ],
-  "functions": [
-    {
+      "site": "nxtai-25-07-api",
       "source": "packages/functions",
-      "codebase": "default",
-      "predeploy": [
-        "npm --prefix packages/functions install"
-      ]
+      "frameworksBackend": {
+        "serviceId": "api-backend",
+        "region": "us-central1"
+      }
     }
   ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "functions": {
+    "source": "packages/functions",
+    "codebase": "api-backend"
   }
 }
